@@ -14,6 +14,7 @@ const Navbar = () => {
     };
     const logout = () => {
       localStorage.clear();
+      setToogle(false);
     }
     return(
         <>

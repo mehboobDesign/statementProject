@@ -43,48 +43,48 @@ const Login = () => {
             //     return;
             // }
 
-            axios.post(LOGIN_URL, {
-                email: user,
-                password: pwd
-              })
-              .then(function (response) {
-                console.log(response.data.token);
-                localStorage.setItem('item',response.data.token);
-                setUser('');
-                setPwd('');
-                //setSuccess(true);
-              })
-              .catch(function (error) {
-                console.log(error);
-              });
-
-            //   try {
-            //     const response = await axios.post(LOGIN_URL,
-            //         {
-            //             email: user,
-            //             password: pwd
-            //         }
-            //     );
-            //     console.log(JSON.stringify(response?.data));
-            //     //console.log(JSON.stringify(response));
-            //     const jwtToken = response?.data?.token;
-            //     setAuth({user, pwd, jwtToken});
+            // axios.post(LOGIN_URL, {
+            //     email: user,
+            //     password: pwd
+            //   })
+            //   .then(function (response) {
+            //     console.log(response.data.token);
+            //     localStorage.setItem('item',response.data.token);
             //     setUser('');
             //     setPwd('');
-            //     navigate( from, { replace: true});
+            //     //setSuccess(true);
+            //   })
+            //   .catch(function (error) {
+            //     console.log(error);
+            //   });
 
-            //   } catch(err) {
-            //     if(!err?.response) {
-            //         setErrMsg('No Server Response');
-            //     } else if (err?.response?.status === 403) {
-            //         setErrMsg('Bad Credientials');
-            //     } else if(err?.response?.status === 401) {
-            //         setErrMsg('Unauthorized');
-            //     } else {
-            //         setErrMsg('Login Failed');
-            //     }
-            //     errorRef.current.focus();
-            //   }
+              try {
+                const response = await axios.post(LOGIN_URL,
+                    {
+                        email: user,
+                        password: pwd
+                    }
+                );
+                console.log(JSON.stringify(response?.data));
+                //console.log(JSON.stringify(response));
+                const jwtToken = response?.data?.token;
+                setAuth({user, pwd, jwtToken});
+                setUser('');
+                setPwd('');
+                navigate( from, { replace: true});
+
+              } catch(err) {
+                if(!err?.response) {
+                    setErrMsg('No Server Response');
+                } else if (err?.response?.status === 403) {
+                    setErrMsg('Bad Credientials');
+                } else if(err?.response?.status === 401) {
+                    setErrMsg('Unauthorized');
+                } else {
+                    setErrMsg('Login Failed');
+                }
+                errorRef.current.focus();
+              }
        
         
     }
@@ -111,7 +111,7 @@ const Login = () => {
                 />
             </div>
             <div className="grid pt-2">
-                <label htmlFor="username" className="mb-2">
+                <label htmlFor="password" className="mb-2">
                     <span className="dark:text-gray-400 text-stone-700">Password:</span>
                 </label>
                 <input
