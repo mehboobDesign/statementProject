@@ -14,13 +14,14 @@ const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.form?.pathname || '/'; 
+    
 
 
     const userRef = useRef();
     const errorRef = useRef();
 
     const [user, setUser] = useState('');
-    const [pwd,setPwd] = useState();
+    const [pwd,setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
 
     useEffect(()=>{

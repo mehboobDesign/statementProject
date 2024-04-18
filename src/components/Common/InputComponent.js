@@ -17,7 +17,13 @@ const InputComponent = (props) => {
                            dark:text-white
                            "
             onChange={props.onChange}
-            placeholder={props.placeholder} />
+            placeholder={props.placeholder}
+            required={props.required}
+            aria-invalid={props.ariaInvalid}
+            aria-describedby={props.ariaDescribedby}
+            onFocus={props.onFocus}
+            //onBlur={props.onBlur}
+            />
         </>
     );
 }

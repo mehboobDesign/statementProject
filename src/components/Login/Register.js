@@ -1,13 +1,13 @@
 import React, {useRef, useState, useEffect} from "react";
 import {faCheck, faTimes, faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const EMAIL_REGEX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-const API_BASE_REGISTER_URL = 'http://localhost:5454/api/v1/auth/register';
+const API_BASE_REGISTER_URL = 'http://localhost:5050/api/v1/auth/register';
 
 
 
@@ -37,6 +37,10 @@ const Register = () => {
 
     const [errMsg, setErrMsg] = useState('');
     const [success, setSuccess] = useState(false);
+
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.form?.pathname || '/login'; 
 
     useEffect(()=>{
         userRef.current.focus();
@@ -86,6 +90,7 @@ const Register = () => {
           .then(function (response) {
             console.log(response);
             setSuccess(true);
+            navigate( from, { replace: true});
           })
           .catch(function (error) {
             console.log(error);

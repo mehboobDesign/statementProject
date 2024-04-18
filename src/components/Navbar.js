@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { useContext } from "react";
+import AuthContext from "../context/AuthProvider";
 
 
 const Navbar = () => {
     const [toogle, setToogle] = useState(false);
+    const { setAuth } = useContext(AuthContext);
+    const navigate = useNavigate();
     const openMenu = () => {
         setToogle(true);
     };
@@ -13,7 +17,8 @@ const Navbar = () => {
         setToogle(false);
     };
     const logout = () => {
-      localStorage.clear();
+      setAuth({});
+      navigate('/');
       setToogle(false);
     }
     return(

@@ -16,6 +16,10 @@ const SelectComponent = (props) => {
                       dark:placeholder-gray-400 dark:text-gray-400
                         "
                 onChange={props.onChange}
+                required
+                aria-invalid={props.ariaInvalid}
+                aria-describedby={props.ariaDescribedby}
+                onFocus={props.onFocus}
                 >
                 <option>{props.defaultValue}</option>
                 {props.values.map((value,index)=>{ 

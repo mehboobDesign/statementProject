@@ -24,7 +24,13 @@ const DatePic = (props) => {
             displayFormat={"DD/MM/YYYY"} 
             placeholder="Registration Date"
             maxDate={new Date()}  
-            onChange={props.onChange} />
+            onChange={props.onChange}
+            
+            // required={props.required}
+            // aria-invalid={props.ariaInvalid}
+            // aria-describedby={props.ariaDescribedby}
+            // onFocus={props.onFocus}
+            />
         </div>
     );
 };
