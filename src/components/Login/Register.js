@@ -36,7 +36,7 @@ const Register = () => {
     const [matchFocus, setMatchFocus] = useState(false);
 
     const [errMsg, setErrMsg] = useState('');
-    const [success, setSuccess] = useState(false);
+    //const [success, setSuccess] = useState(false);
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -89,7 +89,7 @@ const Register = () => {
           })
           .then(function (response) {
             console.log(response);
-            setSuccess(true);
+            //setSuccess(true);
             navigate( from, { replace: true});
           })
           .catch(function (error) {

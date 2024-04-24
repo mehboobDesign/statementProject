@@ -1,5 +1,5 @@
 import React , {useState, useEffect} from "react";
-//import { Link } from "react-router-dom";
+import {  useNavigate, useLocation } from "react-router-dom";
 // import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 // import {faCaretDown} from '@fortawesome/free-solid-svg-icons';
 // import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
@@ -12,6 +12,7 @@ import InputComponent from "../components/Common/InputComponent";
 // import {validateName,validateCaseNumber,validateBlankSpace,validateCustomDate, validateSelectionBox} from "../components/Common/ValidationRule";
 import useAuth from "../components/hooks/useAuth";
 import axios from 'axios';
+import Swal from "sweetalert2";
 
 const CASE_NUMBER_REGEX = /^[0-9]{1,4}\/[0-9]{4}$/;
 const CHAR_REGEX = /^[A-Za-z ,.'-]+$/;
@@ -23,6 +24,9 @@ const ADD_CASE_URL = 'http://localhost:5050/api/v1/cases';
 const SelectLayout = () => {
 
     const { auth } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.form?.pathname || '/pendingList'; 
 
     // const userRef = useRef();
     // const errorRef = useRef();
@@ -61,28 +65,34 @@ const SelectLayout = () => {
 
     useEffect(()=>{
         if(nameOfCourt === "Choose Court") {
-            setValidCourtName(true);
             setCourtNameFocus(true);
-        }
-        else
             setValidCourtName(false);
-        
+        }
+        else {
+            setCourtNameFocus(false);
+            setValidCourtName(true);
+        }
     },[nameOfCourt]);
 
     useEffect(()=>{
         if(caseType === "Choose Case Type") {
-            setValidCaseType(true);
             setCaseTypeFocus(true);
-        } else
             setValidCaseType(false);
+        } else {
+            setCaseTypeFocus(false);
+            setValidCaseType(true);
+        }
+            
     },[caseType]);
 
     useEffect(()=>{
         if(caseCategory === "Choose Case Category") {
-            setValidCaseCategory(true);
             setCaseCategoryFocus(true);
-        } else
             setValidCaseCategory(false);
+        } else {
+            setCaseCategoryFocus(false);
+            setValidCaseCategory(true);
+        }
     },[caseCategory]);
 
     useEffect(()=> {
@@ -112,9 +122,10 @@ const SelectLayout = () => {
 
     const submitData = async (e) => {
         e.preventDefault();
-            if(true){
+            if(validCourtName && validCaseType && validCaseCategory && 
+                validCaseNumber && validFirstPartyName && validSecondPartyName 
+                && validSection && validRegistrationDate){
             const data = {
-                //registrationDate: changeDate.startDate,
                 registrationDate: registrationDate,
                 caseCategory: caseCategory,
                 caseNumber: caseNumber,
@@ -138,6 +149,26 @@ const SelectLayout = () => {
                 // setUser('');
                 // setPwd('');
                 //navigate( from, { replace: true});
+                Swal.fire({
+                    title: "Data saved successfully",
+                    text: "Want to add another data?",
+                    icon: "success",
+                    allowOutsideClick: false,
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes"
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                    //   Swal.fire({
+                    //     title: "Deleted!",
+                    //     text: "Your file has been deleted.",
+                    //     icon: "success"
+                    //   });
+                    navigate( from, { replace: true});
+                     
+                    }
+                  });
 
               } catch(err) {
                
@@ -145,25 +176,22 @@ const SelectLayout = () => {
               }
         } else {
             alert('Plz fill up the form')
-        }
-        
-       
-        
+        }    
     }
     return (
         <>
         <form className="pl-10 pr-10" onSubmit={submitData}> 
             <div className="grid mt-6 mb-6">
                 <SelectComponent 
-                    id="courtName" 
-                    defaultValue = "Choose Court" 
-                    values={courtName} 
-                    onChange={event => setNameOfCourt(event.target.value)}
-                    ariaInvalid={validCourtName ? "false" : "true"}
-                    ariaDescribedby="courtNameNote"
-                    onFocus={()=>setCourtNameFocus(true)}
-                    />
-                    <p id="courtNameNote" className={ validCourtName && courtNameFocus
+                id="courtName" 
+                defaultValue = "Choose Court"
+                values={courtName} 
+                onChange={event => setNameOfCourt(event.target.value)}
+                ariaInvalid={validCourtName ? "false" : "true"}
+                ariaDescribedby="courtNameNote"
+                onFocus={()=>setCourtNameFocus(true)}
+                />
+                    <p id="courtNameNote" className={courtNameFocus
                         ? "text-red-400" : "hidden"}>
                         <FontAwesomeIcon icon={faInfoCircle} />
                             Please select a court to further procced.
@@ -179,7 +207,7 @@ const SelectLayout = () => {
                     ariaDescribedby="caseTypeNote"
                     onFocus={()=>setCaseTypeFocus(true)} 
                     />
-                    <p id="caseTypeNote" className={ validCaseType && caseTypeFocus
+                    <p id="caseTypeNote" className={ caseTypeFocus
                         ? "text-red-400" : "hidden"}>
                         <FontAwesomeIcon icon={faInfoCircle} />
                             Please select a case type to further procced.
@@ -196,7 +224,7 @@ const SelectLayout = () => {
                         ariaDescribedby="caseCategoryNote"
                         onFocus={()=>setCaseCategoryFocus(true)} 
                         />
-                        <p id="caseCategoryNote" className={ validCaseCategory && caseCategoryFocus
+                        <p id="caseCategoryNote" className={ caseCategoryFocus
                         ? "text-red-400" : "hidden"}>
                         <FontAwesomeIcon icon={faInfoCircle} />
                             Please select a case category to further procced.

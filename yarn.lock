@@ -7328,6 +7328,7 @@ __metadata:
     react-router-dom: ^6.14.2
     react-scripts: 5.0.1
     react-tailwindcss-datepicker: ^1.6.6
+    sweetalert2: ^11.10.8
     tailwindcss: ^3.3.3
     web-vitals: ^2.1.4
   languageName: unknown
@@ -12244,6 +12245,13 @@ __metadata:
   bin:
     svgo: bin/svgo
   checksum: b92f71a8541468ffd0b81b8cdb36b1e242eea320bf3c1a9b2c8809945853e9d8c80c19744267eb91cabf06ae9d5fff3592d677df85a31be4ed59ff78534fa420
+  languageName: node
+  linkType: hard
+
+"sweetalert2@npm:^11.10.8":
+  version: 11.10.8
+  resolution: "sweetalert2@npm:11.10.8"
+  checksum: d2a732ecaf6ff70829b145869c843a51bb8d3ab0f679bdf9cd8a1f2a53091e8511fcaf916edc29c8f1a9243ec15a2c25c5faff408edb405945b8b415693b8358
   languageName: node
   linkType: hard
 
