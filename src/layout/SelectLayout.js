@@ -10,16 +10,18 @@ import {courtName,caseTypeArr,criminalCaseCategoryArr,civilCaseCategoryArr} from
 import InputComponent from "../components/Common/InputComponent";
 // import DatePic from "../components/Common/DatePic";
 // import {validateName,validateCaseNumber,validateBlankSpace,validateCustomDate, validateSelectionBox} from "../components/Common/ValidationRule";
+import {CASE_NUMBER_REGEX, CHAR_REGEX, SEC_REGEX, DATE_REGEX} from "../components/Common/ValidationConstants"
 import useAuth from "../components/hooks/useAuth";
 import axios from 'axios';
 import Swal from "sweetalert2";
 
-const CASE_NUMBER_REGEX = /^[0-9]{1,4}\/[0-9]{4}$/;
-const CHAR_REGEX = /^[A-Za-z ,.'-]+$/;
-const SEC_REGEX = /^[^ ][a-zA-Z0-9 ,]*$/;
+// const CASE_NUMBER_REGEX = /^[0-9]{1,4}\/[0-9]{4}$/;
+// const CHAR_REGEX = /^[A-Za-z ,.'-]+$/;
+// const SEC_REGEX = /^[^ ][a-zA-Z0-9 ,]*$/;
 //const DATE_REGEX = /^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}$/;
-const DATE_REGEX = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[1,2])\/(19|20)\d{2}$/;
+// const DATE_REGEX = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[1,2])\/(19|20)\d{2}$/;
 const ADD_CASE_URL = 'http://localhost:5050/api/v1/cases';
+const date = new Date();
 
 const SelectLayout = () => {
 
@@ -81,8 +83,7 @@ const SelectLayout = () => {
         } else {
             setCaseTypeFocus(false);
             setValidCaseType(true);
-        }
-            
+        }  
     },[caseType]);
 
     useEffect(()=>{
@@ -117,8 +118,55 @@ const SelectLayout = () => {
 
     useEffect(()=>{
         const result = DATE_REGEX.test(registrationDate)
-            setValidRegiatrationDate(result);
+            setValidRegiatrationDate(result); age(registrationDate)
     }, [registrationDate]);
+
+    const [day, setDay] = useState();
+    const [month, setMonth] = useState();
+    const [year, setYear] = useState();
+
+    const age = (registrationDate) => {
+            const currentDay = date.getDate();
+            const regDay = registrationDate.substring(0,2);
+            const currentMonth = date.getMonth() + 1;
+            const regMonth = registrationDate.substring(3,5);
+            const currentYear = date.getFullYear(); 
+            const regYear = registrationDate.substring(6,10);
+            
+             if(currentDay < regDay) {
+                const calculateDay = (30 + currentDay) - regDay;
+                setDay(calculateDay);
+                if(currentMonth < regMonth) {
+                    const calculateMonth = (12 + (currentMonth - 1)) - regMonth;
+                    const calculateYear = (currentYear - 1) - regYear;
+                    setMonth(calculateMonth);
+                    setYear(calculateYear);
+                } else {
+                    const calculateMonth = (currentMonth - 1) - regMonth;
+                    const calculateYear = currentYear - regYear;
+                    setMonth(calculateMonth);
+                    setYear(calculateYear);
+                }
+             } else {
+                const calculateDay = currentDay - regDay;
+                setDay(calculateDay);
+                if(currentMonth < regMonth) {
+                    const calculateMonth = (12 + (currentMonth)) - regMonth;
+                    const calculateYear = (currentYear - 1) - regYear;
+                    setMonth(calculateMonth);
+                    setYear(calculateYear);
+                } else {
+                    const calculateMonth = (currentMonth) - regMonth;
+                    const calculateYear = currentYear - regYear;
+                    setMonth(calculateMonth);
+                    setYear(calculateYear);
+                }
+             }
+            
+       
+        
+    }
+
 
     const submitData = async (e) => {
         e.preventDefault();
@@ -133,7 +181,8 @@ const SelectLayout = () => {
                 courtName: nameOfCourt,
                 firstPartyName: firstPartyName,
                 secondPartyName: secondPartyName,
-                sections:section
+                sections:section,
+                ageOfCase:year+" Year "+month+" Month "+day+" Day"
             }
             try {
                 const response = await axios.post(ADD_CASE_URL, data,
@@ -175,7 +224,12 @@ const SelectLayout = () => {
                console.log(err);
               }
         } else {
-            alert('Plz fill up the form')
+            Swal.fire({
+                title: "Please fill up the fields!",
+                icon: "warning",
+                confirmButtonColor:"#3085d6",
+                confirmButtonText:"OK"
+            })
         }    
     }
     return (
@@ -320,6 +374,7 @@ const SelectLayout = () => {
     <button type="submit" 
         className="text-white bg-slate-800 pt-2 pb-2 pl-6 pr-6 rounded-lg hover:bg-slate-700"
         >Add</button>
+        {/* <button onClick={()=>age()}>Check</button> */}
 </form>
 </>
     );
