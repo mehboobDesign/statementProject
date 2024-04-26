@@ -26,17 +26,15 @@ const PendingList =() => {
   };
 
   const showSingleData = (id) => {
-    //console.log(id);
     setDataId(id);
     setModalOpen(true);
-
   }
 
-
   useEffect(()=>{
-    getAllCases();
+    if(!modalOpen) 
+      getAllCases();
     // eslint-disable-next-line 
-  },[]);
+  },[modalOpen]);
 
   return (
     <div className='flex flex-col items-center'>

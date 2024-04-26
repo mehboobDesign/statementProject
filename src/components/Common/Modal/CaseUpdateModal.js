@@ -1,15 +1,21 @@
-import React, { useState} from "react";
+import React, { useState, useEffect} from "react";
 import axios from 'axios';
 import useAuth from "../../hooks/useAuth";
-import { useEffect } from "react";
+import {  useNavigate, useLocation } from "react-router-dom";
 import { CHAR_REGEX_COURT_NAME, CHAR_REGEX_CASE_CAT, 
     CASE_NUMBER_REGEX, SEC_REGEX, ONLY_CHAR_REGEX, DATE_REGEX } from "../ValidationConstants";
+import Swal from "sweetalert2";
 
 const GET_CASESBYID_URL = 'http://localhost:5050/api/v1/cases/';
+const UPDATE_CASE_URL = 'http://localhost:5050/api/v1/cases/update/';
+const date = new Date();
 
 const CaseUpdateModal = ({closeModal, dataId}) => {
 
     const { auth } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.form?.pathname || '/pendingList'; 
 
     const [courtName, setCourtName] = useState('');
     const [validCourtName, setValidCourtName] = useState(false);
@@ -83,9 +89,9 @@ const CaseUpdateModal = ({closeModal, dataId}) => {
     useEffect(()=>{
         const result = DATE_REGEX.test(registrationDate);
         setValidRegiatrationDate(result);
+        age(registrationDate);
     },[registrationDate]);
     
-
     useEffect(()=>{
         if(dataId) {
             showData();  
@@ -101,21 +107,99 @@ const CaseUpdateModal = ({closeModal, dataId}) => {
         }   
         )
         .then(function (response) {
-          //console.log(response.data);
-          setCourtName(response.data.courtName);
-          setCaseType(response.data.caseType);
-          setCaseCategory(response.data.caseCategory);
-          setCaseNumber(response.data.caseNumber);
-          setSections(response.data.sections);
-          setFirstParty(response.data.firstPartyName);
-          setSecondParty(response.data.secondPartyName);
-          setRegistrationDate(response.data.registrationDate);
+            setCourtName(response.data.courtName);
+            setCaseType(response.data.caseType);
+            setCaseCategory(response.data.caseCategory);
+            setCaseNumber(response.data.caseNumber);
+            setSections(response.data.sections);
+            setFirstParty(response.data.firstPartyName);
+            setSecondParty(response.data.secondPartyName);
+            setRegistrationDate(response.data.registrationDate);
+            
         })
       };
 
+    const [day, setDay] = useState();
+    const [month, setMonth] = useState();
+    const [year, setYear] = useState();
+
+    const age = (registrationDate) => {
+            const currentDay = date.getDate();
+            const regDay = registrationDate.substring(0,2);
+            const currentMonth = date.getMonth() + 1;
+            const regMonth = registrationDate.substring(3,5);
+            const currentYear = date.getFullYear(); 
+            const regYear = registrationDate.substring(6,10);
+            
+             if(currentDay < regDay) {
+                const calculateDay = (30 + currentDay) - regDay;
+                setDay(calculateDay);
+                if(currentMonth < regMonth) {
+                    const calculateMonth = (12 + (currentMonth - 1)) - regMonth;
+                    const calculateYear = (currentYear - 1) - regYear;
+                    setMonth(calculateMonth);
+                    setYear(calculateYear);
+                } else {
+                    const calculateMonth = (currentMonth - 1) - regMonth;
+                    const calculateYear = currentYear - regYear;
+                    setMonth(calculateMonth);
+                    setYear(calculateYear);
+                }
+             } else {
+                const calculateDay = currentDay - regDay;
+                setDay(calculateDay);
+                if(currentMonth < regMonth) {
+                    const calculateMonth = (12 + (currentMonth)) - regMonth;
+                    const calculateYear = (currentYear - 1) - regYear;
+                    setMonth(calculateMonth);
+                    setYear(calculateYear);
+                } else {
+                    const calculateMonth = (currentMonth) - regMonth;
+                    const calculateYear = currentYear - regYear;
+                    setMonth(calculateMonth);
+                    setYear(calculateYear);
+                }
+             }  
+    }
+
       const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('heheh');
+        if(validCourtName && validCaseType && validCaseCategory && 
+            validCaseNumber && validFirstParty && validSecondParty 
+            && validSections && validRegistrationDate){
+        const data = {
+            registrationDate: registrationDate,
+            caseCategory: caseCategory,
+            caseNumber: caseNumber,
+            caseType: caseType,
+            courtName: courtName,
+            firstPartyName: firstParty,
+            secondPartyName: secondParty,
+            sections:sections,
+            ageOfCase:year+" Year "+month+" Month "+day+" Day"
+        }
+        try {
+            const response = await axios.put(UPDATE_CASE_URL.concat(dataId), data,
+                {
+                    headers: {
+                        Authorization : `Bearer ${auth.jwtToken}`
+                      }    
+                });
+            console.log(JSON.stringify(response?.data));
+            navigate( from, { replace: true});
+            closeModal();
+          } catch(err) {
+           
+           console.log(err);
+          }
+    } else {
+        Swal.fire({
+            title: "Please fill up the fields!",
+            icon: "warning",
+            confirmButtonColor:"#3085d6",
+            confirmButtonText:"OK"
+        })
+    }    
       }
     
     return(

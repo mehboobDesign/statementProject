@@ -1,25 +1,15 @@
 import React , {useState, useEffect} from "react";
 import {  useNavigate, useLocation } from "react-router-dom";
-// import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-// import {faCaretDown} from '@fortawesome/free-solid-svg-icons';
-// import {faMagnifyingGlass} from '@fortawesome/free-solid-svg-icons';
 import { faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SelectComponent from "../components/Common/SelectComponent";
 import {courtName,caseTypeArr,criminalCaseCategoryArr,civilCaseCategoryArr} from '../components/Common/Arrays';
 import InputComponent from "../components/Common/InputComponent";
-// import DatePic from "../components/Common/DatePic";
-// import {validateName,validateCaseNumber,validateBlankSpace,validateCustomDate, validateSelectionBox} from "../components/Common/ValidationRule";
 import {CASE_NUMBER_REGEX, CHAR_REGEX, SEC_REGEX, DATE_REGEX} from "../components/Common/ValidationConstants"
 import useAuth from "../components/hooks/useAuth";
 import axios from 'axios';
 import Swal from "sweetalert2";
 
-// const CASE_NUMBER_REGEX = /^[0-9]{1,4}\/[0-9]{4}$/;
-// const CHAR_REGEX = /^[A-Za-z ,.'-]+$/;
-// const SEC_REGEX = /^[^ ][a-zA-Z0-9 ,]*$/;
-//const DATE_REGEX = /^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}$/;
-// const DATE_REGEX = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[1,2])\/(19|20)\d{2}$/;
 const ADD_CASE_URL = 'http://localhost:5050/api/v1/cases';
 const date = new Date();
 
@@ -29,9 +19,6 @@ const SelectLayout = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.form?.pathname || '/pendingList'; 
-
-    // const userRef = useRef();
-    // const errorRef = useRef();
 
     const [nameOfCourt, setNameOfCourt] = useState('Choose Court');
     const [validCourtName, setValidCourtName] = useState(false);
@@ -118,7 +105,8 @@ const SelectLayout = () => {
 
     useEffect(()=>{
         const result = DATE_REGEX.test(registrationDate)
-            setValidRegiatrationDate(result); age(registrationDate)
+            setValidRegiatrationDate(result); 
+            age(registrationDate);
     }, [registrationDate]);
 
     const [day, setDay] = useState();
@@ -162,9 +150,6 @@ const SelectLayout = () => {
                     setYear(calculateYear);
                 }
              }
-            
-       
-        
     }
 
 
@@ -192,12 +177,6 @@ const SelectLayout = () => {
                           }    
                     });
                 console.log(JSON.stringify(response?.data));
-                //console.log(JSON.stringify(response));
-                // const jwtToken = response?.data?.token;
-                // setAuth({user, pwd, jwtToken});
-                // setUser('');
-                // setPwd('');
-                //navigate( from, { replace: true});
                 Swal.fire({
                     title: "Data saved successfully",
                     text: "Want to add another data?",
@@ -209,11 +188,6 @@ const SelectLayout = () => {
                     confirmButtonText: "Yes"
                   }).then((result) => {
                     if (result.isConfirmed) {
-                    //   Swal.fire({
-                    //     title: "Deleted!",
-                    //     text: "Your file has been deleted.",
-                    //     icon: "success"
-                    //   });
                     navigate( from, { replace: true});
                      
                     }
