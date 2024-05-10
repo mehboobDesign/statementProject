@@ -3,7 +3,8 @@ import {  useNavigate, useLocation } from "react-router-dom";
 import { faInfoCircle} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SelectComponent from "../components/Common/SelectComponent";
-import {courtName,caseTypeArr,criminalCaseCategoryArr,civilCaseCategoryArr} from '../components/Common/Arrays';
+import {courtName,caseTypeArr,criminalCaseCategoryArr,
+    civilCaseCategoryArr, statusArr, disposedTypeArr} from '../components/Common/Arrays';
 import InputComponent from "../components/Common/InputComponent";
 import {CASE_NUMBER_REGEX, CHAR_REGEX, SEC_REGEX, DATE_REGEX} from "../components/Common/ValidationConstants"
 import useAuth from "../components/hooks/useAuth";
@@ -52,6 +53,18 @@ const SelectLayout = () => {
     const [validRegistrationDate, setValidRegiatrationDate] = useState(false);
     const [registrationDateFocus, setRegistrationDateFocus] = useState(false);
 
+    const [status, setStatus] = useState();
+    const [validStatus, setValidStatus] = useState(false);
+    const [statusFocus, setStatusFocus] = useState(false);
+
+    const [disposedType, setDisposedType] = useState();
+    const [validDisposedType, setValidDisposedType] = useState(false);
+    const [disposedTypeFocus, setDisposedTypeFocus] = useState(false);
+
+    const [disposedDate, setDisposedDate] = useState('');
+    const [validDisposedDate, setValidDisposedDate] = useState(false);
+    const [disposedDateFocus, setDisposedDateFocus] = useState(false);
+
     useEffect(()=>{
         if(nameOfCourt === "Choose Court") {
             setCourtNameFocus(true);
@@ -83,6 +96,26 @@ const SelectLayout = () => {
         }
     },[caseCategory]);
 
+    useEffect(()=>{
+        if(status === "Choose Status") {
+            setStatusFocus(true);
+            setValidStatus(false);
+        } else {
+            setStatusFocus(false);
+            setValidStatus(true);
+        }
+    },[status]);
+
+    useEffect(()=>{
+        if(disposedType === "Choose Disposed Type") {
+            setDisposedTypeFocus(true);
+            setValidDisposedType(false);
+        } else {
+            setDisposedTypeFocus(false);
+            setValidDisposedType(true);
+        }
+    },[disposedType]);
+
     useEffect(()=> {
         const result = CASE_NUMBER_REGEX.test(caseNumber)
         setValidCaseNumber(result);
@@ -108,6 +141,13 @@ const SelectLayout = () => {
             setValidRegiatrationDate(result); 
             age(registrationDate);
     }, [registrationDate]);
+
+    useEffect(()=>{
+        const result = DATE_REGEX.test(disposedDate)
+            setValidDisposedDate(result); 
+            disposedAge(disposedDate);
+            // eslint-disable-next-line
+    }, [disposedDate]);
 
     const [day, setDay] = useState();
     const [month, setMonth] = useState();
@@ -151,23 +191,64 @@ const SelectLayout = () => {
                 }
              }
     }
+    const disposedAge = (disposedDate) => { 
+        const disposedDay = disposedDate.substring(0,2);
+        const regDay = registrationDate.substring(0,2);
+        const disposedMonth = disposedDate.substring(3,5);
+        const regMonth = registrationDate.substring(3,5);
+        const disposedYear = disposedDate.substring(6,10); 
+        const regYear = registrationDate.substring(6,10);
+        
+         if(disposedDay < regDay) {
+            const calculateDay = (30 + disposedDay) - regDay;
+            setDay(calculateDay);
+            if(disposedMonth < regMonth) {
+                const calculateMonth = (12 + (disposedMonth - 1)) - regMonth;
+                const calculateYear = (disposedYear - 1) - regYear;
+                setMonth(calculateMonth);
+                setYear(calculateYear);
+            } else {
+                const calculateMonth = (disposedMonth - 1) - regMonth;
+                const calculateYear = disposedYear - regYear;
+                setMonth(calculateMonth);
+                setYear(calculateYear);
+            }
+         } else {
+            const calculateDay = disposedDay - regDay;
+            setDay(calculateDay);
+            if(disposedMonth < regMonth) {
+                const calculateMonth = (12 + (disposedMonth)) - regMonth;
+                const calculateYear = (disposedYear - 1) - regYear;
+                setMonth(calculateMonth);
+                setYear(calculateYear);
+            } else {
+                const calculateMonth = (disposedMonth) - regMonth;
+                const calculateYear = disposedYear - regYear;
+                setMonth(calculateMonth);
+                setYear(calculateYear);
+            }
+         }
+    }
 
 
-    const submitData = async (e) => {
+    const submitData = async (e) => { 
         e.preventDefault();
             if(validCourtName && validCaseType && validCaseCategory && 
                 validCaseNumber && validFirstPartyName && validSecondPartyName 
-                && validSection && validRegistrationDate){
+                && validSection && validRegistrationDate){ 
             const data = {
-                registrationDate: registrationDate,
+                ageOfCase:year+" Year "+month+" Month "+day+" Day",
                 caseCategory: caseCategory,
                 caseNumber: caseNumber,
                 caseType: caseType,
                 courtName: nameOfCourt,
                 firstPartyName: firstPartyName,
+                registrationDate: registrationDate,
                 secondPartyName: secondPartyName,
                 sections:section,
-                ageOfCase:year+" Year "+month+" Month "+day+" Day"
+                status:status,
+                disposeType:disposedType,
+                disposeTransferDate: disposedDate,
             }
             try {
                 const response = await axios.post(ADD_CASE_URL, data,
@@ -343,12 +424,63 @@ const SelectLayout = () => {
                             Only accept DD/MM/YYYY format eg. 01/05/1992
                         </p> 
                     </div>
+                    <div className="grid mt-6 mb-6">
+                        <SelectComponent 
+                            id="status" 
+                            defaultValue = "Choose Status"
+                            values={statusArr} 
+                            onChange={event => setStatus(event.target.value)}
+                            ariaInvalid={validStatus ? "false" : "true"}
+                            ariaDescribedby="statusNote"
+                            onFocus={()=>setStatusFocus(true)}
+                        />
+                            <p id="courtNameNote" className={statusFocus
+                                ? "text-red-400" : "hidden"}>
+                            <FontAwesomeIcon icon={faInfoCircle} />
+                                Please select the status.
+                            </p>
+                    </div> 
+                    {(status === 'Disposed' || status === 'Transfer') && 
+                    <>
+                        <div className="grid mt-6 mb-6">
+                        <SelectComponent 
+                            id="disposedType" 
+                            defaultValue = "Choose Disposed Type"
+                            values={disposedTypeArr} 
+                            onChange={event => setDisposedType(event.target.value)}
+                            ariaInvalid={validDisposedType ? "false" : "true"}
+                            ariaDescribedby="DisposedTypeNote"
+                            onFocus={()=>setDisposedTypeFocus(true)}
+                            />
+                            <p id="DisposedTypeNote" className={disposedTypeFocus
+                                ? "text-red-400" : "hidden"}>
+                            <FontAwesomeIcon icon={faInfoCircle} />
+                                Please select the disposed type.
+                            </p>
+                        </div>
+                        <div className="grid mt-6 mb-6">
+                            <InputComponent 
+                                id="disposedDate"
+                                placeholder="Dispose/Transfer Date" 
+                                onChange={event => setDisposedDate(event.target.value)}
+                                required
+                                ariaInvalid={validDisposedDate ? "false" : "true"}
+                                ariaDescribedby="disposedDateNote"
+                                onFocus={()=>setDisposedDateFocus(true)}
+                            /> 
+                            <p id="disposedDateNote" className={disposedDateFocus && disposedDate && !validDisposedDate
+                                ? "text-red-400" : "hidden"}>
+                                <FontAwesomeIcon icon={faInfoCircle} />
+                                Only accept DD/MM/YYYY format eg. 01/05/1992
+                            </p> 
+                        </div>
+                    </> 
+                    }    
                 </>
             }       
     <button type="submit" 
         className="text-white bg-slate-800 pt-2 pb-2 pl-6 pr-6 rounded-lg hover:bg-slate-700"
         >Add</button>
-        {/* <button onClick={()=>age()}>Check</button> */}
 </form>
 </>
     );

@@ -23,8 +23,8 @@ const Navbar = () => {
     }
     return(
         <>
-        <nav className='w-full h-14 bg-slate-900 flex justify-between items-center sticky top-0 z-20 pt-8 pb-8 border-b-[0.1px] border-slate-800'>
-          <div className="text-2xl font-bold px-4 text-lime-300">
+        <nav className='w-full h-14 bg-neutral-300 dark:bg-slate-900 flex justify-between items-center sticky top-0 z-20 pt-8 pb-8 border-b-[0.1px] border-neutral-400 dark:border-b-[0.1px] dark:border-slate-800'>
+          <div className="text-2xl font-bold px-4 text-slate-600 dark:text-lime-300">
           <Link to='/'>Easy Data</Link>
           </div>
           
@@ -49,8 +49,8 @@ const Navbar = () => {
          
           
           {/* <div className='hidden md:block px-2 py-2'>Welcome Mr. M. Alam</div> */}
-          <div className='flex items-center justify-center rounded-full w-12 h-12 bg-slate-800 hover:bg-slate-700 mr-4'>
-            {!toogle && <div onClick={openMenu}><FontAwesomeIcon className='text-lime-300 cursor-pointer' icon={faBars} size="lg" /></div>}
+          <div className='flex items-center justify-center rounded-full w-12 h-12 bg-neutral-400 hover:bg-neutral-500 dark:bg-slate-800 dark:hover:bg-slate-700 mr-4'>
+            {!toogle && <div onClick={openMenu}><FontAwesomeIcon className='text-slate-800 hover:text-white dark:hover:text-lime-400 dark:text-lime-300 cursor-pointer' icon={faBars} size="lg" /></div>}
             {toogle && <div onClick={closeMenu}><FontAwesomeIcon className='text-lime-300 cursor-pointer' icon={faXmark} size="lg" /></div>}
           </div>
         </nav>
