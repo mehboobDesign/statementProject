@@ -1,6 +1,6 @@
 import React from "react";
 
-const CaseListModal = ({closeModal, caseRecords}) => {
+const CaseListModal = ({closeModal, caseRecords}) => { 
     return (
     <>
         <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
