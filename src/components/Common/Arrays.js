@@ -9,10 +9,14 @@ const criminalCaseCategoryArr = [
     'Special Witch Hunting'
  ];
  const civilCaseCategoryArr = [
-    'Title Suit', 'TS(D)', 'TS(M)', 'TS(R)', 'Misc(P)', 'Misc(G)'
+    'Title Appeal','Money Appeal','Misc Civil Appeal','Misc Appeal', 'Title Suit(Probate)','Misc Succession',
+    'Misc Guardianship','Title Suit(D)', 'Title Suit(M)','Title Suit(R)','Land Acquisition','Misc(j)',
+    'Consumer Act. Cases','Money Execution Cases','Misc Probate','Misc T','Misc Revocation',
  ];
  const statusArr = ['Pending', 'Disposed', 'Transfer'];
  const disposedTypeArr = ['Contested', 'Uncontested'];
 
+ const BASE_URL = 'http://localhost:5050/api/v1/cases/';
+
  export {courtName, caseTypeArr, criminalCaseCategoryArr, 
-   civilCaseCategoryArr, statusArr, disposedTypeArr};
+   civilCaseCategoryArr, statusArr, disposedTypeArr, BASE_URL};
