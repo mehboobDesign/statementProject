@@ -5,10 +5,12 @@ import {  useNavigate, useLocation } from "react-router-dom";
 import { CHAR_REGEX_COURT_NAME, CHAR_REGEX_CASE_CAT, 
     CASE_NUMBER_REGEX, SEC_REGEX, ONLY_CHAR_REGEX, DATE_REGEX } from "../ValidationConstants";
 import Swal from "sweetalert2";
+import SelectComponent from "../SelectComponent";
 
 const GET_CASESBYID_URL = 'http://localhost:5050/api/v1/cases/';
 const UPDATE_CASE_URL = 'http://localhost:5050/api/v1/cases/update/';
 const date = new Date();
+
 
 const CaseUpdateModal = ({closeModal, dataId}) => {
 
@@ -48,6 +50,11 @@ const CaseUpdateModal = ({closeModal, dataId}) => {
     const [registrationDate, setRegistrationDate] = useState('');
     const [validRegistrationDate, setValidRegiatrationDate] = useState(false);
     const [registrationDateFocus, setRegistrationDateFocus] = useState(false);
+
+    const [status, setStatus] = useState('');
+    const [statusCategory, setStatusCategory] = useState('');
+    const [disposedType, setDisposedType] = useState('');
+    const [disposeTransferDate, setDisposeTransferDate] = useState('');
 
     useEffect(()=> {
         const result = CHAR_REGEX_COURT_NAME.test(courtName);
@@ -115,6 +122,7 @@ const CaseUpdateModal = ({closeModal, dataId}) => {
             setFirstParty(response.data.firstPartyName);
             setSecondParty(response.data.secondPartyName);
             setRegistrationDate(response.data.registrationDate);
+            setStatus(response.data.status);
             
         })
       };
@@ -176,7 +184,10 @@ const CaseUpdateModal = ({closeModal, dataId}) => {
             firstPartyName: firstParty,
             secondPartyName: secondParty,
             sections:sections,
-            ageOfCase:year+" Year "+month+" Month "+day+" Day"
+            ageOfCase:year+" Year "+month+" Month "+day+" Day",
+            status:statusCategory,
+            disposedType: disposedType,
+            disposeTransferDate: disposeTransferDate,
         }
         try {
             const response = await axios.put(UPDATE_CASE_URL.concat(dataId), data,
@@ -357,6 +368,35 @@ const CaseUpdateModal = ({closeModal, dataId}) => {
                                     ? "text-red-400" : "hidden"}>
                                      Registration Date of dd/mm/yyyy format
                                 </p>
+                                
+                                <SelectComponent 
+                                    defaultValue={status}
+                                    values={status === 'Pending' ? ['Disposed','Transfer'] : ['']}
+                                    onChange={event=> setStatusCategory(event.target.value)}
+                                />
+                                { (statusCategory === 'Disposed' || statusCategory === 'Transfer') && 
+                                    <>
+                                        <SelectComponent 
+                                            defaultValue="Disposed Type"
+                                            values = {['Contested','Uncontested']}
+                                            onChange={event=>setDisposedType(event.target.value)}
+                                        />
+                                        <input 
+                                            className="bg-slate-100 w-96 dark:bg-slate-700 p-2 rounded-lg text-gray-400 focus:outline-none mt-2"
+                                            type="text"
+                                            id="disposedDate"
+                                            defaultValue='Disposed Date/Transfer Date'
+                                            autoComplete="off"
+                                            onChange={(e)=>setDisposeTransferDate(e.target.value)}
+                                            required
+                                            // aria-invalid={validRegistrationDate ? "false" : "true"}
+                                            // aria-describedby="registrationDateNote"
+                                            // onFocus={()=>setRegistrationDateFocus(true)}
+                                            // onBlur={()=>setRegistrationDateFocus(false)}
+                                        />
+                                    </>
+                                    
+                                }
                                 <div className="px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
                                     <button className="inline-flex w-full justify-center rounded-md bg-green-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto">Update</button>
                                     <button type="button" className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto" onClick={closeModal}>Cancel</button>

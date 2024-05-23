@@ -2,8 +2,9 @@ import React, {useEffect, useState} from 'react';
 import useAuth from "../components/hooks/useAuth";
 import axios from 'axios';
 import CaseUpdateModal from './Common/Modal/CaseUpdateModal';
+import { BASE_URL } from './Common/Arrays';
 
-const GET_CASES_URL = 'http://localhost:5050/api/v1/cases/pending';
+const GET_CASES_URL = BASE_URL.concat('pending/');
 
 const PendingList =() => {
 
@@ -13,7 +14,7 @@ const PendingList =() => {
   const [dataId, setDataId] = useState('');
 
   const getAllCases = async () => {
-    await axios.get(GET_CASES_URL, {
+    await axios.get(GET_CASES_URL.concat(auth.nameOfCourt), {
       headers: {
         Authorization : `Bearer ${auth.jwtToken}`
       }
