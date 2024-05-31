@@ -3,14 +3,18 @@ import axios from 'axios';
 import useAuth from "../hooks/useAuth";
 import { BASE_URL } from "../Common/Arrays";
 
-const OPENING_CIVIL_CASES = BASE_URL.concat('civilOpeningBalance/');
-const OPENING_CRIMINAL_CASES = BASE_URL.concat('criminalOpeningBalance/');
+const OPENING_CIVIL_CASES = BASE_URL.concat('civilOpening/');
+const OPENING_CRIMINAL_CASES = BASE_URL.concat('criminalOpening/');
 const CIVIL_INSTITUTION = BASE_URL.concat('civilInstitution/');
 const CRIMINAL_INSTITUTION = BASE_URL.concat('criminalInstitution/');
 const CIVIL_DISPOSED = BASE_URL.concat('civilDisposed/transfer/');
 const CRIMINAL_DISPOSED = BASE_URL.concat('criminalDisposed/transfer/');
+const CIVIL_OLD_DISPOSED = BASE_URL.concat('civilOldDisposed/monthly/');
+const CRIMINAL_OLD_DISPOSED = BASE_URL.concat('criminalOldDisposed/monthly/');
+const CIVIL_OLD_PENDING = BASE_URL.concat('civilCases/oldPending/');
+const CRIMINAL_OLD_PENDING = BASE_URL.concat('criminalCases/oldPending/');
 
-const PendencyArrear = ({monthValue,month,year}) => { 
+const PendencyArrear = ({monthValue,month,year}) => { console.log(year)
     const { auth } = useAuth();
     const [totalCivilPending, setTotalCivilPending] = useState(0);
     const [totalCriminalPending, setTotalCriminalPending] = useState(0);
@@ -24,6 +28,15 @@ const PendencyArrear = ({monthValue,month,year}) => {
     const [civilClosingBalance, setCivilClosingBalance] = useState(0);
     const [criminalClosingBalance, setCriminalClosingBalance] = useState(0);
     const [closingBalance, setClosingBalance] = useState(0);
+    const [percentageCivil, setPercentageCivil] = useState(0);
+    const [percentageCriminal, setPercentageCriminal] = useState(0);
+    const [percentageTotal, setPercentageTotal] = useState(0);
+    const [civilMonthlyOldDisposed, setCivilMonthlyOldDisposed] = useState(0);
+    const [criminalMonthlyOldDisposed, setCriminalMonthlyOldDisposed] = useState(0);
+    const [totalMonthlyOldDisposed, setTotalMonthlyOldDisposed] = useState(0);
+    const [civilOldPending, setCivilOldPending] = useState(0);
+    const [criminalOldPending, setCriminalOldPending] = useState(0);
+    const [totalOldPending, setTotalOldPending] = useState(0);
 
     useEffect(()=>{
         const getCivilPendingList = async () => {
@@ -66,7 +79,7 @@ const PendencyArrear = ({monthValue,month,year}) => {
                         }
                     }
                     )
-                    .then(function (response) {
+                    .then(function (response) { console.log("Civil Ins" + response.data);
                     setCivilInstitution(response.data.length);
                     })
                 } catch(err) {
@@ -118,12 +131,72 @@ const PendencyArrear = ({monthValue,month,year}) => {
                     console.log(err);
             }
         };
+        const getCivilOldDisposed = async () => {
+            try {
+                await axios.get(CIVIL_OLD_DISPOSED.concat(auth.nameOfCourt).concat('/')
+                .concat(monthValue).concat('/').concat(year), {
+                    headers: {
+                        Authorization : `Bearer ${auth.jwtToken}`
+                    }
+                }).then(function(response) {
+                    setCivilMonthlyOldDisposed(response.data.length);
+                })
+            } catch(err) {
+                console.log(err);
+            }
+        };
+        const getCriminalOldDisposed = async () => {
+            try {
+                await axios.get(CRIMINAL_OLD_DISPOSED.concat(auth.nameOfCourt).concat('/')
+                .concat(monthValue).concat('/').concat(year), {
+                    headers: {
+                        Authorization : `Bearer ${auth.jwtToken}`
+                    }
+                }).then(function(response) {
+                    setCriminalMonthlyOldDisposed(response.data.length);
+                })
+            } catch(err) {
+                console.log(err);
+            }
+        };
+        const getCivilOldPending = async () => {
+            try {
+                await axios.get(CIVIL_OLD_PENDING.concat(auth.nameOfCourt)
+                , {
+                    headers: {
+                        Authorization : `Bearer ${auth.jwtToken}`
+                    }
+                }).then(function(response) {
+                    setCivilOldPending(response.data.length);
+                })
+            } catch(err) {
+                console.log(err);
+            }
+        };
+        const getCriminalOldPending = async () => {
+            try {
+                await axios.get(CRIMINAL_OLD_PENDING.concat(auth.nameOfCourt)
+                , {
+                    headers: {
+                        Authorization : `Bearer ${auth.jwtToken}`
+                    }
+                }).then(function(response) {
+                    setCriminalOldPending(response.data.length);
+                })
+            } catch(err) {
+                console.log(err);
+            }
+        };
         getCivilPendingList();
         getCriminalPendingList();
         getCivilInstitution();
         getCriminalInstitution();
         getCivilDisposed();
         getCriminalDisposed();
+        getCivilOldDisposed();
+        getCriminalOldDisposed();
+        getCivilOldPending();
+        getCriminalOldPending();
     },[auth.jwtToken,auth.nameOfCourt,monthValue,year]);
 
     useEffect(()=>{
@@ -145,14 +218,35 @@ const PendencyArrear = ({monthValue,month,year}) => {
         const getClosingBalance = () => {
             setClosingBalance(civilClosingBalance + criminalClosingBalance)
         };
+        const getInDePerCivil = () => {
+            setPercentageCivil((((civilClosingBalance - totalCivilPending)/totalCivilPending)*100).toFixed(2))
+        }
+        const getInDePerCriminal = () => {
+            setPercentageCriminal((((criminalClosingBalance - totalCriminalPending)/totalCriminalPending)*100).toFixed(2))
+        }
+        const getInDePerTotal = () => {
+            setPercentageTotal((((closingBalance - totalPending)/totalPending)*100).toFixed(2))
+        }
+        const getTotalOldDisposed = () => {
+            setTotalMonthlyOldDisposed(civilMonthlyOldDisposed + criminalMonthlyOldDisposed)
+        }
+        const getTotalOldPending = () => {
+            setTotalOldPending(civilOldPending + criminalOldPending);
+        }
         getTotalOpeningPending();
         getTotalInstitution();
         getTotalDisposed();
         getCivilClosingBalance();
         getCriminalClosingBalance();
         getClosingBalance();
+        getInDePerCivil();
+        getInDePerCriminal();
+        getInDePerTotal();
+        getTotalOldDisposed();
+        getTotalOldPending()
     },[civilInstitution,criminalInstitution,civilDisposed,criminalDisposed, 
-        civilClosingBalance,criminalClosingBalance, totalCivilPending, totalCriminalPending]);
+        civilClosingBalance,criminalClosingBalance, totalCivilPending, totalCriminalPending, closingBalance, 
+        totalPending, civilMonthlyOldDisposed, criminalMonthlyOldDisposed, civilOldPending, criminalOldPending]);
 
     return(
         <>
@@ -209,6 +303,15 @@ const PendencyArrear = ({monthValue,month,year}) => {
                     <td>{civilClosingBalance}</td>
                     <td>{criminalClosingBalance}</td>
                     <td>{closingBalance}</td>
+                    <td>{percentageCivil}</td>
+                    <td>{percentageCriminal}</td>
+                    <td>{percentageTotal}</td>
+                    <td>{civilMonthlyOldDisposed}</td>
+                    <td>{criminalMonthlyOldDisposed}</td>
+                    <td>{totalMonthlyOldDisposed}</td>
+                    <td>{civilOldPending}</td>
+                    <td>{criminalOldPending}</td>
+                    <td>{totalOldPending}</td>
                 </tr>
                 
             </tbody>
