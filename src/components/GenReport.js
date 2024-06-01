@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import PendencyArrear from './Report/PendencyArrear';
+import YearwiseBreakup from './Report/YearwiseBreakup';
 
 const date = new Date();
 
@@ -52,6 +53,7 @@ const GenReport =() => {
            text-cyan-50'>Go</button>
       </div>
       {open && <PendencyArrear monthValue={currMonth.toString.length === 1 ? '0'+currMonth : ''+currMonth} month={monthName} year={currYear}/>}
+      {open && <YearwiseBreakup monthValue={currMonth.toString.length === 1 ? '0'+currMonth : ''+currMonth} month={monthName} year={currYear}/>}
     </div>
     </>
     

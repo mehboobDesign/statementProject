@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import axios from 'axios';
 import useAuth from "../hooks/useAuth";
 import { BASE_URL } from "../Common/Arrays";
+import PendencyPdfModal from "../PdfReport/PendencyPdfModal";
 
 const OPENING_CIVIL_CASES = BASE_URL.concat('civilOpening/');
 const OPENING_CRIMINAL_CASES = BASE_URL.concat('criminalOpening/');
@@ -14,7 +15,7 @@ const CRIMINAL_OLD_DISPOSED = BASE_URL.concat('criminalOldDisposed/monthly/');
 const CIVIL_OLD_PENDING = BASE_URL.concat('civilCases/oldPending/');
 const CRIMINAL_OLD_PENDING = BASE_URL.concat('criminalCases/oldPending/');
 
-const PendencyArrear = ({monthValue,month,year}) => { console.log(year)
+const PendencyArrear = ({monthValue,month,year}) => { 
     const { auth } = useAuth();
     const [totalCivilPending, setTotalCivilPending] = useState(0);
     const [totalCriminalPending, setTotalCriminalPending] = useState(0);
@@ -38,6 +39,8 @@ const PendencyArrear = ({monthValue,month,year}) => { console.log(year)
     const [criminalOldPending, setCriminalOldPending] = useState(0);
     const [totalOldPending, setTotalOldPending] = useState(0);
 
+    const [modalOpen, setModalOpen] = useState(false);
+
     useEffect(()=>{
         const getCivilPendingList = async () => {
             try {
@@ -48,7 +51,7 @@ const PendencyArrear = ({monthValue,month,year}) => { console.log(year)
                         }
                     }
                 )
-                .then(function (response) { console.log(response);
+                .then(function (response) { 
                     setTotalCivilPending(response.data.length);
                 })
             } catch(err) {
@@ -64,7 +67,7 @@ const PendencyArrear = ({monthValue,month,year}) => { console.log(year)
                         }
                     }
                 )
-                .then(function (response) { console.log(response);
+                .then(function (response) { 
                     setTotalCriminalPending(response.data.length);
                 })
             } catch(err) {
@@ -79,7 +82,7 @@ const PendencyArrear = ({monthValue,month,year}) => { console.log(year)
                         }
                     }
                     )
-                    .then(function (response) { console.log("Civil Ins" + response.data);
+                    .then(function (response) { 
                     setCivilInstitution(response.data.length);
                     })
                 } catch(err) {
@@ -316,6 +319,17 @@ const PendencyArrear = ({monthValue,month,year}) => { console.log(year)
                 
             </tbody>
         </table>
+            <button onClick={()=>setModalOpen(true)} className="text-white border border-stone-400 mt-2 mb-6 p-2 hover:bg-stone-400">Generate Pendency Arrear PDF</button>
+            {modalOpen && <PendencyPdfModal closeModal={()=>setModalOpen(false)} month={month} year={year} totalCivilPending={totalCivilPending}
+            totalCriminalPending={totalCriminalPending} totalPending={totalPending} 
+            civilInstitution={civilInstitution} criminalInstitution={criminalInstitution} 
+            totalInstitution={totalInstitution} civilDisposed={civilDisposed} criminalDisposed={criminalDisposed}
+            totalDisposed={totalDisposed} civilClosingBalance={civilClosingBalance} 
+            criminalClosingBalance={criminalClosingBalance} closingBalance={closingBalance} percentageCivil={percentageCivil}
+            percentageCriminal={percentageCriminal} percentageTotal={percentageTotal}
+            civilMonthlyOldDisposed={civilMonthlyOldDisposed} criminalMonthlyOldDisposed={criminalMonthlyOldDisposed}
+            totalMonthlyOldDisposed={totalMonthlyOldDisposed} civilOldPending={civilOldPending}
+            criminalOldPending={criminalOldPending} totalOldPending={totalOldPending}/>}
         </>
     );
 }
