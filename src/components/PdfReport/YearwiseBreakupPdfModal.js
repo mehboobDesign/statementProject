@@ -53,11 +53,10 @@ const styles = StyleSheet.create({
     },
   });
 
-const PendencyPdfModal = ({closeModal,month,year,nameOfCourt,totalCivilPending,totalCriminalPending,totalPending,
-    civilInstitution,criminalInstitution,totalInstitution,civilDisposed, criminalDisposed,
-    totalDisposed,civilClosingBalance,criminalClosingBalance,closingBalance,percentageCivil
-    ,percentageCriminal,percentageTotal,civilMonthlyOldDisposed,criminalMonthlyOldDisposed
-    ,totalMonthlyOldDisposed,civilOldPending,criminalOldPending,totalOldPending}) => {
+const YearwiseBreakupPdfModal = ({closeModal,month,year, courtName, upto1yrOldCivil,upto1yrOldCriminal,
+    oneToTwoCivil,oneToTwoCriminal,twoToThreeCivil,twoToThreeCriminal,threeToFiveCivil,
+    threeToFiveCriminal,fiveToTenCivil,fiveToTenCriminal,tenToFifteenCivil,
+    tenToFifteenCriminal,fifteenCivil,fifteenCriminal,totalCivil,totalCriminal}) => {
 return(
     <>
         <div className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -69,67 +68,58 @@ return(
                                     <div className="text-center sm:text-left">     
                                         <PDFViewer className="w-full h-96">
           {/* Start of the document*/}
-        <Document title={"Pendency Arrear for the Month of ".concat(`${month}`).concat(` ${year}`)}>
+        <Document title={"Yearwise Breakup for the Month of ".concat(`${month}`).concat(` ${year}`)}>
             {/*render a single page*/}
             <Page size="A4" style={styles.page} orientation="landscape">
               <View style={styles.h1Heading}>
-                <Text style={styles.text1}>Pendency Arrear for the Month of {month}, {year}</Text>
-                <Text style={styles.text2}>{nameOfCourt}</Text>
+                <Text style={styles.text1}>Yearwise Breakup for the Month of {month} {year} </Text>
+                <Text style={styles.text2}>{courtName}</Text>
               </View>
               <View style={styles.h2Heading}>
-                <Text style={styles.text3}>Opening Balance</Text>
-                <Text style={styles.text4}>Institution during the month of {month}, {year}</Text>
-                <Text style={styles.text4}>Disposal during the month of {month}, {year}</Text>
-                <Text style={styles.text4}>Closing Balance at the end of the Month of {month}, {year}</Text>
-                <Text style={styles.text4}>% increase or decrease in pendency vis-a-vis previuos month ( + denotes increase) ( - denotes decrease)</Text>
-                <Text style={styles.text4}>Disposed of cases which are more than 5 year old</Text>
-                <Text style={styles.text4}>Pendency of case which are more than 5 years old at the end of the month of {month}, {year}</Text>
+                <Text style={styles.text3}>Upto 1 Year</Text>
+                <Text style={styles.text4}>More than 1 & less than 2 Years</Text>
+                <Text style={styles.text4}>More than 2 & less than 3 Years</Text>
+                <Text style={styles.text4}>More than 3 & less than 5 Years</Text>
+                <Text style={styles.text4}>More than 5 & less than 10 Years</Text>
+                <Text style={styles.text4}>More than 10 & less than 15 Years</Text>
+                <Text style={styles.text4}>More than 15 Years</Text>
+                <Text style={styles.text4}>Total</Text>
               </View>
               <View style={styles.h3Heading}>
                 <Text style={styles.text3}>Cvl</Text>
                 <Text style={styles.text4}>Crl</Text>
-                <Text style={styles.text4}>Total</Text>
                 <Text style={styles.text4}>Cvl</Text>
                 <Text style={styles.text4}>Crl</Text>
-                <Text style={styles.text4}>Total</Text>
                 <Text style={styles.text4}>Cvl</Text>
                 <Text style={styles.text4}>Crl</Text>
-                <Text style={styles.text4}>Total</Text>
                 <Text style={styles.text4}>Cvl</Text>
                 <Text style={styles.text4}>Crl</Text>
-                <Text style={styles.text4}>Total</Text>
                 <Text style={styles.text4}>Cvl</Text>
                 <Text style={styles.text4}>Crl</Text>
-                <Text style={styles.text4}>Total</Text>
                 <Text style={styles.text4}>Cvl</Text>
                 <Text style={styles.text4}>Crl</Text>
-                <Text style={styles.text4}>Total</Text>
                 <Text style={styles.text4}>Cvl</Text>
                 <Text style={styles.text4}>Crl</Text>
-                <Text style={styles.text4}>Total</Text>
+                <Text style={styles.text4}>Cvl</Text>
+                <Text style={styles.text4}>Crl</Text>
               </View>
               <View style={styles.h3Heading}>
-                <Text style={styles.text3}>{totalCivilPending}</Text>
-                <Text style={styles.text4}>{totalCriminalPending}</Text>
-                <Text style={styles.text4}>{totalPending}</Text>
-                <Text style={styles.text4}>{civilInstitution}</Text>
-                <Text style={styles.text4}>{criminalInstitution}</Text>
-                <Text style={styles.text4}>{totalInstitution}</Text>
-                <Text style={styles.text4}>{civilDisposed}</Text>
-                <Text style={styles.text4}>{criminalDisposed}</Text>
-                <Text style={styles.text4}>{totalDisposed}</Text>
-                <Text style={styles.text4}>{civilClosingBalance}</Text>
-                <Text style={styles.text4}>{criminalClosingBalance}</Text>
-                <Text style={styles.text4}>{closingBalance}</Text>
-                <Text style={styles.text4}>{percentageCivil}</Text>
-                <Text style={styles.text4}>{percentageCriminal}</Text>
-                <Text style={styles.text4}>{percentageTotal}</Text>
-                <Text style={styles.text4}>{civilMonthlyOldDisposed}</Text>
-                <Text style={styles.text4}>{criminalMonthlyOldDisposed}</Text>
-                <Text style={styles.text4}>{totalMonthlyOldDisposed}</Text>
-                <Text style={styles.text4}>{civilOldPending}</Text>
-                <Text style={styles.text4}>{criminalOldPending}</Text>
-                <Text style={styles.text4}>{totalOldPending}</Text>
+                <Text style={styles.text3}>{upto1yrOldCivil}</Text>
+                <Text style={styles.text4}>{upto1yrOldCriminal}</Text>
+                <Text style={styles.text4}>{oneToTwoCivil}</Text>
+                <Text style={styles.text4}>{oneToTwoCriminal}</Text>
+                <Text style={styles.text4}>{twoToThreeCivil}</Text>
+                <Text style={styles.text4}>{twoToThreeCriminal}</Text>
+                <Text style={styles.text4}>{threeToFiveCivil}</Text>
+                <Text style={styles.text4}>{threeToFiveCriminal}</Text>
+                <Text style={styles.text4}>{fiveToTenCivil}</Text>
+                <Text style={styles.text4}>{fiveToTenCriminal}</Text>
+                <Text style={styles.text4}>{tenToFifteenCivil}</Text>
+                <Text style={styles.text4}>{tenToFifteenCriminal}</Text>
+                <Text style={styles.text4}>{fifteenCivil}</Text>
+                <Text style={styles.text4}>{fifteenCriminal}</Text>
+                <Text style={styles.text4}>{totalCivil}</Text>
+                <Text style={styles.text4}>{totalCriminal}</Text>
               </View>
             </Page>
           </Document>
@@ -148,4 +138,4 @@ return(
     </>
 );
 }
-export default PendencyPdfModal;
+export default YearwiseBreakupPdfModal;

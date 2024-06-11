@@ -320,7 +320,7 @@ const PendencyArrear = ({monthValue,month,year}) => {
             </tbody>
         </table>
             <button onClick={()=>setModalOpen(true)} className="text-white border border-stone-400 mt-2 mb-6 p-2 hover:bg-stone-400">Generate Pendency Arrear PDF</button>
-            {modalOpen && <PendencyPdfModal closeModal={()=>setModalOpen(false)} month={month} year={year} totalCivilPending={totalCivilPending}
+            {modalOpen && <PendencyPdfModal closeModal={()=>setModalOpen(false)} month={month} year={year} nameOfCourt={auth.nameOfCourt} totalCivilPending={totalCivilPending}
             totalCriminalPending={totalCriminalPending} totalPending={totalPending} 
             civilInstitution={civilInstitution} criminalInstitution={criminalInstitution} 
             totalInstitution={totalInstitution} civilDisposed={civilDisposed} criminalDisposed={criminalDisposed}
