@@ -225,7 +225,7 @@ const MFormat = ({monthValue,month,year}) => {
                 </tr>  
             </tbody>
         </table>
-        <button onClick={()=>setModalOpen(true)} className="text-stone-600 border border-stone-400 mt-2 mb-6 p-2 hover:bg-stone-400">Generate M1 Format PDF</button>
+        <button onClick={()=>setModalOpen(true)} className="text-stone-600 dark:text-stone-300 border border-stone-400 mt-2 mb-6 p-2 hover:bg-orange-400 hover:text-stone-50">Generate M Format PDF</button>
             {modalOpen && <MFormatPdfModal closeModal={()=>setModalOpen(false)} month={month} year={year} courtName = {auth.nameOfCourt} totalBegining={totalBegining}
             totalIns={totalIns} mainCaseContested={mainCaseContested} 
             mainCaseUncontested={mainCaseUncontested} miscCaseContested={miscCaseContested} 

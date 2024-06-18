@@ -2,6 +2,9 @@ import React, {useState, useEffect, useRef} from 'react';
 import PendencyArrear from './Report/PendencyArrear';
 import YearwiseBreakup from './Report/YearwiseBreakup';
 import MFormat from './Report/MFormat';
+import M1Format from './Report/M1Format';
+import M2Format from './Report/M2Format';
+import XFormat from './Report/XFormat';
 
 const reportArr = ['Pendency Arrear', 'Yearwise breakup', 'M Format', 'M1 Format', 'M2 Format', 'X Format', 
                 'Y Format', 'Z Format'];
@@ -88,6 +91,15 @@ const GenReport =() => {
         </div>
         <div className={`${selectedTab === 2 ? '' : 'hidden'}`}>
           {open && <MFormat monthValue={currMonth.toString().length === 1 ? '0'+currMonth : ''+currMonth} month={monthName} year={currYear}/>} 
+        </div>
+        <div className={`${selectedTab === 3 ? '' : 'hidden'}`}>
+          {open && <M1Format monthValue={currMonth.toString().length === 1 ? '0'+currMonth : ''+currMonth} month={monthName} year={currYear}/>} 
+        </div>
+        <div className={`${selectedTab === 4 ? '' : 'hidden'}`}>
+          {open && <M2Format monthValue={currMonth.toString().length === 1 ? '0'+currMonth : ''+currMonth} month={monthName} year={currYear}/>} 
+        </div>
+        <div className={`${selectedTab === 5 ? '' : 'hidden'}`}>
+          {open && <XFormat currDate={currDate} monthValue={currMonth.toString().length === 1 ? '0'+currMonth : ''+currMonth} month={monthName} year={currYear}/>} 
         </div>
         </div>
       </div>

@@ -344,7 +344,7 @@ const YearwiseBreakup = ({monthValue,month,year}) => {
                 </tr>  
             </tbody>
         </table>
-        <button onClick={()=>setModalOpen(true)} className="text-white border border-stone-400 mt-2 mb-6 p-2 hover:bg-stone-400">Generate Yearwise Breakup PDF</button>
+        <button onClick={()=>setModalOpen(true)} className="text-stone-600 dark:text-stone-300 border border-stone-400 mt-2 mb-6 p-2 hover:bg-orange-400 hover:text-stone-50">Generate Yearwise Breakup PDF</button>
             {modalOpen && <YearwiseBreakupPdfModal closeModal={()=>setModalOpen(false)} month={month} year={year} courtName = {auth.nameOfCourt} upto1yrOldCivil={upto1yrOldCivil}
             upto1yrOldCriminal={upto1yrOldCriminal} oneToTwoCivil={oneToTwoCivil} 
             oneToTwoCriminal={oneToTwoCriminal} twoToThreeCivil={twoToThreeCivil} 

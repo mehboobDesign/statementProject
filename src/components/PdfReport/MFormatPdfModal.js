@@ -155,7 +155,7 @@ return(
                                     <div className="text-center sm:text-left">     
                                         <PDFViewer className="w-full h-96">
           {/* Start of the document*/}
-        <Document title={"M1 Format for the Month of ".concat(`${month}`).concat(` ${year}`)}>
+        <Document title={"M Format for the Month of ".concat(`${month}`).concat(` ${year}`)}>
             {/*render a single page*/}
             <Page size="A4" style={styles.page} orientation="landscape">
               <View style={styles.h1Heading}>
