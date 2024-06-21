@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     
   });
 
-const XFormatPdfModal = ({closeModal,currDate,month,year, monthValue, sessTy1,sessTy2AfterRape,ndpsAct,
+const XFormatPdfModal = ({yFormat,closeModal,currDate,month,year, monthValue, sessTy1,sessTy2AfterRape,ndpsAct,
     crlAppl,crlRevn,electricity,rapeCases,otherCrlCases,crlPending,miscJ,titleAppeals,moneyAppeals,
     miscCivilAppl,succession,guardianship,miscCaseProbate,titleSuitP,titleSuitMatri,
     otherCivilCases,civilPending,totalCases}) => {
@@ -129,6 +129,7 @@ const XFormatPdfModal = ({closeModal,currDate,month,year, monthValue, sessTy1,se
         useEffect(()=>{
             setSubTotal(sessTy1+sessTy2AfterRape+ndpsAct+crlAppl+crlRevn+electricity+rapeCases)
         },[sessTy1,sessTy2AfterRape,ndpsAct,crlAppl,crlRevn,electricity,rapeCases])
+        console.log(yFormat);
 
 return(
     <>
@@ -141,14 +142,16 @@ return(
                                     <div className="text-center sm:text-left">     
                                         <PDFViewer className="w-full h-96">
           {/* Start of the document*/}
-        <Document title={"X Format for the Month of ".concat(`${month}`).concat(` ${year}`)}>
+          <Document title={"X Format for the Month of ".concat(`${month}`).concat(` ${year}`)}> 
+          
+        
             {/*render a single page*/}
             <Page size="A4" style={styles.page} orientation="landscape">
               <View style={styles.h1Heading}>
-                <Text style={styles.text1}>FORMAT X</Text>
+                <Text style={styles.text1}>{yFormat?'FORMAT Y':'FORMAT X'}</Text>
               </View>
               <View style={styles.h1Heading}>
-                <Text style={styles.text2}>STATEMENT REGARDING MONTH-WISE, COURT-WISE & CATEGORY-WISE PENDENCY OF CASES IN THE 
+                <Text style={styles.text2}>STATEMENT REGARDING MONTH-WISE, COURT-WISE & CATEGORY-WISE PENDENCY OF {yFormat?'5 YEARS OR MORE OLD CASES':'CASES'} IN THE 
                     SUB-ORDINATE COURTS FOR THE MONTH OF {month}, {year}</Text>
               </View>
               <View style={styles.h1Heading}>

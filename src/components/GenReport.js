@@ -5,6 +5,8 @@ import MFormat from './Report/MFormat';
 import M1Format from './Report/M1Format';
 import M2Format from './Report/M2Format';
 import XFormat from './Report/XFormat';
+import YFormat from './Report/YFormat';
+import ZFormat from './Report/ZFormat';
 
 const reportArr = ['Pendency Arrear', 'Yearwise breakup', 'M Format', 'M1 Format', 'M2 Format', 'X Format', 
                 'Y Format', 'Z Format'];
@@ -55,7 +57,7 @@ const GenReport =() => {
         case '12': setMonthName("December"); break;
         default : setMonthName('No'); break;
     }
-}
+};
   return (
     <>
     <div className='pl-10 pr-10'>
@@ -77,7 +79,7 @@ const GenReport =() => {
               ref={index === 0 ? firstBtnRef : null}
               key={index} 
               onClick={()=>setSelectedTab(index)}
-              className='outline-none w-full p-2 hover:bg-orange-400 rounded-xl text-center focus:ring-2 focus:bg-white focus:text-blue-600'
+              className=' outline-none w-full p-2 hover:bg-orange-400 rounded-xl text-center focus:ring-2 focus:bg-white focus:text-blue-600'
               >
               {item}</button>
           ))}
@@ -100,6 +102,12 @@ const GenReport =() => {
         </div>
         <div className={`${selectedTab === 5 ? '' : 'hidden'}`}>
           {open && <XFormat currDate={currDate} monthValue={currMonth.toString().length === 1 ? '0'+currMonth : ''+currMonth} month={monthName} year={currYear}/>} 
+        </div>
+        <div className={`${selectedTab === 6 ? '' : 'hidden'}`}>
+          {open && <YFormat currDate={currDate} monthValue={currMonth.toString().length === 1 ? '0'+currMonth : ''+currMonth} month={monthName} year={currYear}/>} 
+        </div>
+        <div className={`${selectedTab === 7 ? '' : 'hidden'}`}>
+          {open && <ZFormat currDate={currDate} monthValue={currMonth.toString().length === 1 ? '0'+currMonth : ''+currMonth} month={monthName} year={currYear}/>} 
         </div>
         </div>
       </div>
